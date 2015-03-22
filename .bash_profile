@@ -9,6 +9,9 @@ unset PATH
 PATH="/usr/local/bin:/usr/local/git/bin:/opt/local/bin:/bin:/sbin:/usr/bin:/usr/sbin"
 export PATH
 
+# yeah, america/toronto...
+TZ='America/Toronto'; export TZ
+
 [ -f /Applications/TextMate.app/Contents/Resources/mate ] && export PATH="${PATH}:/Applications/TextMate.app/Contents/Resources/"
 
 PROJDIR="${HOME}/github"
