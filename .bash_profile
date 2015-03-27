@@ -217,8 +217,9 @@ if [[ -f /usr/share/dict/words && -x $(which ruby) ]]; then
     done
 
     echo $WORDS
-
+    # Do cleanup now 
     rm -f -- $DICTTMP 1>/dev/null
+    unset WORDS DICTSRC DICTTMP ITERATIONS
   }
 fi
 
