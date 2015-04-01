@@ -335,6 +335,6 @@ FIGNORE=.svn:.git:.hg
 
 export PATH="/usr/local/bin:$PATH:/Users/lisas/.gem/ruby/1.8/bin"
 
-if [[ "x$(which rbenv)" != "x" ]]; then
+if [[ "x$(which rbenv 2>/dev/null)" != "x" ]]; then
   eval "$(rbenv init -)"
 fi
