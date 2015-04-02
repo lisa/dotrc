@@ -18,6 +18,9 @@ PROJDIR="${HOME}/github"
 UNAME_S="$(uname -s)"
 HNAME="$(uname -n)"
 PAGER=less
+GPGKEYUSER="Lisa Seelye"
+PASSWORDSRC="$HOME/passwords"
+
 
 [ -x /usr/xpg4/bin/id ] && ID="/usr/xpg4/bin/id" || ID="/usr/bin/id" #solaris should prefer /usr/xpg4/bin/id
 
@@ -200,6 +203,25 @@ else
   alias mv="mv -iv"
 fi
 
+# These only matter if we have gpg available and we're an interactive shell.
+if [[ "x$(which gpg)" != "x" && $INTERACTIVE == "1" ]]; then
+  # Ensure we have a real place to stash passwords
+  mkdir -m 700 -p $PASSWORDSRC 2>/dev/null
+  # Ensure permissions are as I want
+  chmod 700 $PASSWORDSRC 2>/dev/null
+  chown $(id -u):$(id -g) $PASSWORDSRC 2>/dev/null
+  
+  e() {
+    local src=$1
+    gpg --batch --yes -r "$GPGKEYUSER" -a -e $src
+  }
+  
+  d() {
+    local src=$1
+    gpg -d $PASSWORDSRC/${src/\.asc/}.asc
+  }
+fi
+
 if [[ -f /usr/share/dict/words && -x $(which ruby) ]]; then
   mkpwds() {
     DICTSRC="/usr/share/dict/words"
@@ -313,6 +335,6 @@ FIGNORE=.svn:.git:.hg
 
 export PATH="/usr/local/bin:$PATH:/Users/lisas/.gem/ruby/1.8/bin"
 
-if [[ "x$(which rbenv)" != "x" ]]; then
+if [[ "x$(which rbenv 2>/dev/null)" != "x" ]]; then
   eval "$(rbenv init -)"
 fi
