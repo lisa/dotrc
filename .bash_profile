@@ -197,7 +197,7 @@ elif [ "${UNAME_S}" == "Darwin" ]; then
   alias rm="rm -iv"
   alias mv="mv -iv"
 else
-	alias ll="ls -l"
+  alias ll="ls -l"
   alias cp="cp -ivr"
   alias rm="rm -iv"
   alias mv="mv -iv"
