@@ -205,6 +205,10 @@ fi
 
 # These only matter if we have gpg available and we're an interactive shell.
 if [[ "x$(which gpg)" != "x" && $INTERACTIVE == "1" ]]; then
+  # If keychain is running let's get the agents into our environment.
+  [[ -f "${HOME}/.keychain/${HOSTNAME}-sh" ]] && . "${HOME}/.keychain/${HOSTNAME}-sh"
+  [[ -f "${HOME}/.keychain/${HOSTNAME}-sh-gpg" ]] && . "${HOME}/.keychain/${HOSTNAME}-sh-gpg"
+  
   # Ensure we have a real place to stash passwords
   mkdir -m 700 -p $PASSWORDSRC 2>/dev/null
   # Ensure permissions are as I want
