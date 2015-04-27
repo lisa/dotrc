@@ -274,6 +274,12 @@ if [ -x /usr/bin/screen ]; then
   }
 fi
 
+if [[ -x /usr/local/bin/docker && -d $HOME/Kitematic ]]; then
+  export DOCKER_HOST=tcp://192.168.99.100:2376
+  export DOCKER_CERT_PATH=/Users/lisas/.docker/machine/machines/dev
+  export DOCKER_TLS_VERIFY=1
+fi
+
 # Redefine colorise if we're not supposed to use color
 
 if [ ${COLOR} != "1" ]; then
