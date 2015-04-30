@@ -155,6 +155,18 @@ COLOR=1
 ######## Straight on Functions
 ###########################################################
 
+ensure_ssh_configd() {
+  mkdir -p $HOME/.ssh/ssh_config.d
+  chmod 700 $HOME/.ssh
+  chmod 700 $HOME/.ssh/ssh_config.d
+}
+
+create_ssh_config() {
+  ensure_ssh_configd
+  # What could possibly go wrong with this?
+  cat $HOME/.ssh/ssh_config.d/* > $HOME/.ssh/config
+}
+
 is_root() {
 
   if [ "$(${ID} -u)" == "0" ]; then
@@ -321,6 +333,13 @@ export PS1='\[\033[01;32m\]\u@\h \[\033[01;34m\]\W \$ \[\033[00m\]'
 ###########################################################
 
 if [ "${INTERACTIVE}" == 1 ]; then
+  
+  # Concatenate ssh config fragments into ~/.ssh/ssh_config
+  # ssh does not allow including of subfiles so we're left with this hack
+  # Perhaps ensure a ~/.ssh/ssh_config.d (700) and use numbering of files for 
+  # order.
+  ensure_ssh_configd
+  create_ssh_config
   
   if [ -n "${PROJDIR}" ]; then
     alias pd="cd ${PROJDIR}"
