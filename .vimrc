@@ -56,3 +56,5 @@ set hls!
 if has('syntax') && (&t_Co > 2)
   syntax on
 end
+set paste
+set ruler

@@ -167,6 +167,11 @@ create_ssh_config() {
   cat $HOME/.ssh/ssh_config.d/* > $HOME/.ssh/config
 }
 
+ensure_bash_profiled() {
+  mkdir -p $HOME/.bash_profile.d
+  chmod 700 $HOME/.bash_profile.d
+}
+
 is_root() {
 
   if [ "$(${ID} -u)" == "0" ]; then
@@ -213,6 +218,22 @@ else
   alias cp="cp -ivr"
   alias rm="rm -iv"
   alias mv="mv -iv"
+fi
+
+if [[ "x$(which git)" != "x" ]]; then
+  GITVERSION=$(git --version | cut -d " " -f 3)
+  # Bash completion helpers. Let's look in some usual spots.
+  if [[ ${UNAME_S} == "Darwin" ]]; then
+    if [[ -f /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash ]]; then
+      source /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash
+    elif [[ -f /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash ]]; then
+      source /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash
+    fi
+  elif [[ ${UNAME_S} == "Linux" ]]; then
+    if [[ -f /usr/share/doc/git-${GITVERSION}/contrib/completion/git-completion.bash ]]; then
+      source /usr/share/doc/git-${GITVERSION}/contrib/completion/git-completion.bash
+    fi
+  fi
 fi
 
 # These only matter if we have gpg available and we're an interactive shell.
@@ -333,13 +354,21 @@ export PS1='\[\033[01;32m\]\u@\h \[\033[01;34m\]\W \$ \[\033[00m\]'
 ###########################################################
 
 if [ "${INTERACTIVE}" == 1 ]; then
-  
+    
   # Concatenate ssh config fragments into ~/.ssh/ssh_config
   # ssh does not allow including of subfiles so we're left with this hack
   # Perhaps ensure a ~/.ssh/ssh_config.d (700) and use numbering of files for 
   # order.
   ensure_ssh_configd
   create_ssh_config
+  
+  # Make sure we have a $HOME/.bash_profile.d directory so we can source it
+  ensure_bash_profiled
+  if [[ -f $HOME/.bash_profile.d/local.sh ]]; then
+    # If there is a local file present we'll source it to include here.
+    # Put sensitive sttuff in that directory and keep it out of git!
+    source $HOME/.bash_profile.d/local.sh
+  fi
   
   if [ -n "${PROJDIR}" ]; then
     alias pd="cd ${PROJDIR}"
