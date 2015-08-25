@@ -1,16 +1,18 @@
 autocmd!
 set shiftwidth=2
 set softtabstop=2
+set tabstop=2
 set shiftround
 set expandtab
 set autoindent
 set showmatch
 set showmode
 set showcmd
+set number
 
 
 set formatoptions-=t
-set textwidth=79
+set textwidth=78
 
 set background=dark
 
