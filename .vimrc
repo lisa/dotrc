@@ -18,7 +18,7 @@ set comments-=s1:/*,mb:*,ex:*/
 set comments+=s:/*,mb:**,ex:*/
 set comments+=fb:*
 
-set mouse=n
+set mouse=
 
 " Fix for putty not liking UTF-8
 let &termencoding = &encoding
