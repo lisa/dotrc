@@ -242,6 +242,12 @@ if [[ "x$(which gpg)" != "x" && $INTERACTIVE == "1" ]]; then
   [[ -f "${HOME}/.keychain/${HOSTNAME}-sh" ]] && . "${HOME}/.keychain/${HOSTNAME}-sh"
   [[ -f "${HOME}/.keychain/${HOSTNAME}-sh-gpg" ]] && . "${HOME}/.keychain/${HOSTNAME}-sh-gpg"
   
+  # Can we just copy to clipboard?
+  HAS_CLIPBOARDCOPY="no"
+  if [[ $(which pbcopy 2>/dev/null) ]]; then
+    HAS_CLIPBOARDCOPY="yes"
+  fi
+  
   # Ensure we have a real place to stash passwords
   mkdir -m 700 -p $PASSWORDSRC 2>/dev/null
   # Ensure permissions are as I want
@@ -254,8 +260,30 @@ if [[ "x$(which gpg)" != "x" && $INTERACTIVE == "1" ]]; then
   }
   
   d() {
-    local src=$1
-    gpg -d $PASSWORDSRC/${src/\.asc/}.asc
+    local src= copy_to_clipboard=0
+    # if there's one parameter treat it as a filename
+    if [[ -z $2 ]]; then
+      src=$PASSWORDSRC/${1/\.asc/}.asc
+    else
+      copy_to_clipboard=1
+      # $1 is -c, not the file
+      if [[ $1 == "-c" ]]; then
+        src=$PASSWORDSRC/${2/\.asc/}.asc
+      else
+        src=$PASSWORDSRC/${1/\.asc/}.asc
+      fi
+    fi
+    if [[ ! -f $src ]]; then
+      echo "Can't find the password file at $src"
+      return 1
+    fi
+
+    if [[ $HAS_CLIPBOARDCOPY == "yes" && $copy_to_clipboard == "1" ]]; then
+      # Copying to clipboard will include any newline on line 1.
+      gpg -d $src 2>/dev/null | head -n1 | pbcopy
+    else
+      gpg -d $src 2>/dev/null
+    fi
   }
 fi
 
@@ -264,15 +292,16 @@ if [[ -f /usr/share/dict/words && -x $(which ruby) ]]; then
     DICTSRC="/usr/share/dict/words"
     DICTTMP="$(mktemp -t XXXXXX)"
     WORDS=""
-    ITERATIONS=8
+    arg=$1
+    ITERATIONS="${arg:=4}"
     
     touch $DICTTMP
     chmod 0600 $DICTTMP
-    grep -E '[a-z]{6,}' $DICTSRC > $DICTTMP
+    grep -E '[a-z]{3,5}' $DICTSRC > $DICTTMP
     
     for i in $(seq 1 $ITERATIONS)
     do
-      WORDS="${WORDS} $(ruby -e "puts File.read('$DICTTMP').lines.select {|w| w.length >=6 }.sample.downcase")"
+      WORDS="${WORDS} $(ruby -e "puts File.read('$DICTTMP').lines.select {|w| w.length >= 3 && w.length <= 5 }.sample.downcase")"
     done
 
     echo $WORDS
@@ -396,3 +425,19 @@ export PATH="/usr/local/bin:$PATH:/Users/lisas/.gem/ruby/1.8/bin"
 if [[ "x$(which rbenv 2>/dev/null)" != "x" ]]; then
   eval "$(rbenv init -)"
 fi
+
+if [[ ! "$PATH" == */usr/local/opt/fzf/bin* ]]; then
+  export PATH="$PATH:/usr/local/opt/fzf/bin"
+fi
+
+[[ $- == *i* ]] && source /usr/local/opt/fzf/shell/completion.bash 2> /dev/null
+
+source /usr/local/opt/fzf/shell/key-bindings.bash
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+if [[ "x$(which go)" != "x" ]]; then
+  export GOPATH="$HOME/go"
+  mkdir $HOME/go 2>/dev/null
+fi
+
+export GPG_TTY=$(tty)
