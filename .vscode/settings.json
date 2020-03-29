@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "*.mk.plain": "makefile",
+    "*.json.*.plain": "json"
+  }
+}
