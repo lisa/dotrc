@@ -8,7 +8,7 @@ IMG := thedoh/dotfiles-decrypter:latest
 __PWD := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 
 ### Dotfiles (even if they're not .files) and Directories to create
-__DOTFILES := .bash_profile.d/.gitkeep .vimrc .bash_profile
+__DOTFILES := .bash_profile.d/.gitkeep .vimrc .bash_profile .gitconfig .gitignore_global
 __DIRS := $(HOME)/.bash_profile.d $(HOME)/.config
 
 # Plain text version of secure.mk.vault

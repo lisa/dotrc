@@ -87,3 +87,4 @@ rm -f decrypt_pw
 
 * Randomize filenames of encrypted files
 * Remove private info from secure.mk so secure.mk can be public
+* Reintroduce find as a way to find candidate dotfiles to save having to manually maintain `__DOTFILES` in the [Makefile](./Makefile)
