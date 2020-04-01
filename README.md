@@ -33,6 +33,7 @@ echo "decryption password" > decrypt_pw
 make secure.mk.plain
 # Create file(s) with a .plain suffix
 make encrypt-all
+make -f secure.mk.vault check-files
 make secure.mk.vault
 make clean-plain
 rm -f decrypt_pw
@@ -51,6 +52,7 @@ make secure.mk.plain
 make -f secure.mk.plain .ssh/config.plain
 # Edit .ssh/config.plain
 make -f secure.mk.plain .ssh/config.vault
+make -f secure.mk.vault check-files
 make secure.mk.vault
 make clean-plain
 rm -f decrypt_pw
@@ -71,6 +73,7 @@ make secure.mk.plain
 make decrypt-all
 echo "new decryption password" > decrypt_pw
 make encrypt-all
+make -f secure.mk.vault check-files
 make secure.mk.vault
 make clean-plain
 rm -f decrypt_pw

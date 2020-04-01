@@ -97,6 +97,11 @@ if [[ $(which git 2>/dev/null) ]]; then
   done
 fi
 
+if [[ $(which oc 2>/dev/null) || $(which kubectl 2>/dev/null) ]]; then
+  # Set up k alias to oc if it's there, kubectl otherwise
+  alias k=$(which oc kubectl 2>/dev/null | head -n1)
+fi
+
 if [[ $(which gpg 2>/dev/null)  ]]; then
   export GPG_TTY=$(tty)
   # If keychain is running let's get the agents into our environment.

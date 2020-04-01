@@ -9,7 +9,7 @@ __PWD := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 
 ### Dotfiles (even if they're not .files) and Directories to create
 __DOTFILES := .bash_profile.d/.gitkeep .vimrc .bash_profile .gitconfig .gitignore_global
-__DIRS := $(HOME)/.bash_profile.d $(HOME)/.config
+__DIRS := $(join $(HOME)/,.bash_profile.d) $(join $(HOME)/,.config)
 
 # Plain text version of secure.mk.vault
 SECURE_MK := $(join $(__PWD),secure.mk.plain)
@@ -17,7 +17,7 @@ SECURE_MK := $(join $(__PWD),secure.mk.plain)
 SECURE_MK_VAULT := $(join $(__PWD),$(shell basename $(SECURE_MK) |sed -e 's,\.plain$$,\.vault,'))
 
 # transform the relative path from the git repo to where it goes in $HOME
-DOTFILES := $(foreach dotfile,$(__DOTFILES),$(join $(HOME),$(dotfile)))
+DOTFILES := $(foreach dotfile,$(__DOTFILES),$(join $(HOME)/,$(dotfile)))
 SECURE_PW_FILE ?= $(join $(__PWD),decrypt_pw)
 
 all: dirs $(DOTFILES) $(SECURE_MK) run_secure
@@ -29,7 +29,7 @@ endif
 ## Make directories with mode 0700
 dirs: $(__DIRS)
 $(__DIRS):
-	$(AT)$(INSTALL) -m 0700 -o $(shell id -u $(USER)) -g $(shell id -g $(USER)) $@
+	$(AT)$(INSTALL) -d -m 0700 -o $(shell id -u $(USER)) -g $(shell id -g $(USER)) $@
 
 # Do the actual install of our .dotfiles
 $(DOTFILES): dirs $(__DOTFILES)
