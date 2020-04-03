@@ -7,6 +7,7 @@ unset PATH
 export PATH="$HOME:/bin:/usr/local/bin:/usr/local/git/bin:/opt/local/bin:/bin:/sbin:/usr/bin:/usr/sbin:"
 
 [[ -x /Applications/TextMate.app/Contents/Resources/mate ]] && export PATH="${PATH}:/Applications/TextMate.app/Contents/Resources"
+[[ -x "${HOME}/bin" ]] && export PATH="${HOME}/bin:${PATH}"
 
 export PS1='\[\033[01;32m\]\u@\h \[\033[01;34m\]\W \$ \[\033[00m\]'
 export LSCOLORS="exfxcxdxbxegedabagacad"
