@@ -9,7 +9,6 @@ Just some dot files for myself. Nothing to see.
 echo "decryption password" > decrypt_pw
 make
 make clean-plain
-rm -f decrypt_pw
 ```
 
 Afterwards, validate contents on disk and, if desired, remove the `.old` backup copies.
@@ -26,21 +25,18 @@ Once added, in [Makefile](./Makefile), add it to the `__DOTFILES` list. If a new
 
 To create content that is to be encrypted, create the file as normal, in the relative directory structure required, and ensure it has a `.plain` file suffix. The `make encrypt-all` target will encrypt it. See [Directory Hierarchy](#directory-hierarchy).
 
-Similar to [Plain Text](#plain-text) directories, secure one can be added to the `__DIRS` list in `secure.mk`.
+Similar to [Plain Text](#plain-text) directories, secure one can be added to the same `__DIRS` list in the [Makefile](./Makefile).
 
 ```shell
 echo "decryption password" > decrypt_pw
-make secure.mk.plain
 # Create file(s) with a .plain suffix
 make encrypt-all
-make -f secure.mk.vault check-files
-make secure.mk.vault
+make check-files
 make clean-plain
-rm -f decrypt_pw
 # done
 ```
 
-Edit or create the appropriate `.plain` files. If there are additions, add them in `secure.mk.plain` in either the `ENCRYPTED_FILES_OPENREAD` or `ENCRYPTED_FILES_PRIVATE` variables with their relative path.
+Edit or create the appropriate `.plain` files. If there are additions, add them in [Makefile](./Makefile) in either the `ENCRYPTED_FILES_OPENREAD` or `ENCRYPTED_FILES_PRIVATE` variables with their relative path.
 
 ## Encrypted Change
 
@@ -48,14 +44,11 @@ Similar to [Encrypted Addition](#encrypted-addition), except only a single file 
 
 ```shell
 echo "decryption password" > decrypt_pw
-make secure.mk.plain
-make -f secure.mk.plain .ssh/config.plain
+make .ssh/config.plain
 # Edit .ssh/config.plain
-make -f secure.mk.plain .ssh/config.vault
-make -f secure.mk.vault check-files
-make secure.mk.vault
+make .ssh/config.vault
+make check-files
 make clean-plain
-rm -f decrypt_pw
 # done
 ```
 
@@ -69,14 +62,11 @@ Encrypted files follow a similar pattern. That is, if a file should be created a
 
 ```shell
 echo "decryption password" > decrypt_pw
-make secure.mk.plain
 make decrypt-all
 echo "new decryption password" > decrypt_pw
 make encrypt-all
-make -f secure.mk.vault check-files
-make secure.mk.vault
+make check-files
 make clean-plain
-rm -f decrypt_pw
 # done
 ```
 
@@ -85,9 +75,7 @@ rm -f decrypt_pw
 * This contraption does handle not removing the file when removed from this git repository on the next `make` deployment.
 * Files outside of `$HOME` are not supported.
 
-
 # TODO
 
 * Randomize filenames of encrypted files
-* Remove private info from secure.mk so secure.mk can be public
 * Reintroduce find as a way to find candidate dotfiles to save having to manually maintain `__DOTFILES` in the [Makefile](./Makefile)
