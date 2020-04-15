@@ -47,7 +47,10 @@ fi
 # Ruby-style
 if [[ -f /usr/share/dict/words && -x $(which ruby 2>/dev/null) ]]; then
   mkpwds() {
-    local dictsrc=/usr/share/dict/words dicttmp=$(mktemp -t XXXXXX) words= iterations=${1:=4}
+    local dictsrc=/usr/share/dict/words dicttmp=$(mktemp -t XXXXXX) words= iterations=${1}
+    if [[ -z $iterations ]]; then
+      iterations=4
+    fi
     
     touch $dicttmp
     chmod 0600 $dicttmp
