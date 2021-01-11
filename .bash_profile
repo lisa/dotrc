@@ -54,11 +54,11 @@ if [[ -f /usr/share/dict/words && -x $(which ruby 2>/dev/null) ]]; then
     
     touch $dicttmp
     chmod 0600 $dicttmp
-    grep -E '[a-z]{3,5}' $dictsrc > $dicttmp
+    grep -E '^[a-z]{3,5}$' $dictsrc > $dicttmp
     
     for i in $(seq 1 $iterations)
     do
-      words="${words} $(ruby -e "puts File.read('$dicttmp').lines.select {|w| w.length >= 3 && w.length <= 5 }.sample.downcase")"
+      words="${words} $(shuf -n 1 $dicttmp)"
     done
 
     echo $words
