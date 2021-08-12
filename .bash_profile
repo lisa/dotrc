@@ -44,8 +44,8 @@ PERL
 }
 fi
 
-# Ruby-style
-if [[ -f /usr/share/dict/words && -x $(which ruby 2>/dev/null) ]]; then
+# Use words
+if [[ -f /usr/share/dict/words ]]; then
   mkpwds() {
     local dictsrc=/usr/share/dict/words dicttmp=$(mktemp -t XXXXXX) words= iterations=${1}
     if [[ -z $iterations ]]; then
