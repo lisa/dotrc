@@ -68,6 +68,8 @@ if [[ -f /usr/share/dict/words ]]; then
 fi
 
 ## Aliases
+GREP=$(which -a grep | head -n1)
+alias grep="$GREP --color"
 alias cp="/bin/cp -ivr"
 alias rm="/bin/rm -iv"
 alias mv="/bin/mv -iv"
