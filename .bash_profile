@@ -133,6 +133,11 @@ if [[ -s /usr/local/opt/kube-ps1/share/kube-ps1.sh ]]; then
   PS1='$(kube_ps1)'$PS1
 fi
 
+# Try to disable Github.com spyware
+export GH_TELEMETRY=false
+export DO_NOT_TRACK=true
+# Github.com spyware section end
+
 # Anything from a secured end?
 source ~/.bash_profile.d/secure_end.sh 2>/dev/null
 source ~/.bash_profile.d/local_end.sh 2>/dev/null
